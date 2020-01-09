@@ -41,15 +41,15 @@ void globalInit() {
  * 综合以下功能
  * 初始化/仿真步长设置/跳闸指令
  */
-void linkSimulation(Device* device, char* deviceName, double time, int onOff, double* port1, double* port2, int* tripSignal) {
+void linkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* port1, double* port2, int* tripSignal) {
     // 设置整定值
     if (notYet(device, "设置保护装置名及保护定值")) {
-        deviceInit(device, deviceName, onOff);
+        deviceInit(device, deviceName, deviceEnable);
     }
 
     // 只有装置启用情况下才进行计算
     // 仿真程序跑10次, 进行一次采样和保护计算
-    if (device->onOff == 1 && upTo10(device) == 1) {
+    if (device->deviceEnable == 1 && upTo10(device) == 1) {
         sample(device, time, port1, port2);
         line(device);
     }
@@ -61,13 +61,13 @@ void linkSimulation(Device* device, char* deviceName, double time, int onOff, do
 
 }
 
-void deviceInit(Device* device, char* deviceName, int onOff){
+void deviceInit(Device* device, char* deviceName, int deviceEnable){
     // 设置装置名
-    if (onOff == 0) {
+    if (deviceEnable == 0) {
         // 装置不启用
-        device->onOff = 0;
+        device->deviceEnable = 0;
     } else {
-        device->onOff = 1;
+        device->deviceEnable = 1;
 
         strcpy(device->deviceName, deviceName);
 
@@ -177,50 +177,34 @@ int readConfiguration(Device* device) {
         // printf("%s=%s\n", _paramk, _paramv);
     }
 
-    // 设置整定值
-    /*
-    device->lineStartSetValue[0] = findSetValueIndex("lineCurrentAbruptStart", paramName, paramValue, index); // 电流突变量启动
-    device->lineStartSetValue[1] = findSetValueIndex("lineZeroCurrentStart", paramName, paramValue, index); // 零序电流启动
 
-    device->overCurrentSetValue[0] = findSetValueIndex("lineOverCurrent-I", paramName, paramValue, index);  // I段
-    device->overCurrentSetValue[1] = findSetValueIndex("lineOverCurrent-II", paramName, paramValue, index);  // II段
-    device->overCurrentSetValue[2] = findSetValueIndex("lineOverCurrent-III", paramName, paramValue, index);  // III段
+    device->lineStartSetValue[0] = findSetValueIndex("线路电流突变量启动", paramName, paramValue, index, device); // 电流突变量启动
+    device->lineStartSetValue[1] = findSetValueIndex("线路零序电流启动", paramName, paramValue, index, device); // 零序电流启动
 
-    device->overCurrentTimeSetValue[0] = findSetValueIndex("lineOverCurrentTime-I", paramName, paramValue, index); // I段延时20ms
-    device->overCurrentTimeSetValue[1] = findSetValueIndex("lineOverCurrentTime-II", paramName, paramValue, index); // II段
-    device->overCurrentTimeSetValue[2] = findSetValueIndex("lineOverCurrentTime-III", paramName, paramValue, index); // III段
-    device->overCurrentTimeSetValue[3] = findSetValueIndex("lineOverCurrentReturnTime", paramName, paramValue, index); // 返回
+    device->currentDiffEnable = (int) findSetValueIndex("线路电流差动保护投入", paramName, paramValue, index, device);
 
-    device->distanceSetValue[0] = findSetValueIndex("lineDistance-I", paramName, paramValue, index);
-    device->distanceSetValue[1] = findSetValueIndex("lineDistance-II", paramName, paramValue, index);
-    device->distanceSetValue[2] = findSetValueIndex("lineDistance-III", paramName, paramValue, index);
+    device->deltaDistanceEnable = (int) findSetValueIndex("线路工频变化量距离保护投入", paramName, paramValue, index, device);
 
-    device->distanceTimeSetValue[0] = findSetValueIndex("lineDistanceTime-I", paramName, paramValue, index);
-    device->distanceTimeSetValue[1] = findSetValueIndex("lineDistanceTime-II", paramName, paramValue, index);
-    device->distanceTimeSetValue[2] = findSetValueIndex("lineDistanceTime-III", paramName, paramValue, index);
-    device->distanceTimeSetValue[3] = findSetValueIndex("lineDistanceReturnTime", paramName, paramValue, index);
-    */
+    device->distanceEnable = (int) findSetValueIndex("线路距离保护投入", paramName, paramValue, index, device);
+    device->distanceSetValue[0] = findSetValueIndex("线路距离I段", paramName, paramValue, index, device);
+    device->distanceSetValue[1] = findSetValueIndex("线路距离II段", paramName, paramValue, index, device);
+    device->distanceSetValue[2] = findSetValueIndex("线路距离III段", paramName, paramValue, index, device);
+    device->distanceTimeSetValue[0] = findSetValueIndex("线路距离I段时间", paramName, paramValue, index, device);
+    device->distanceTimeSetValue[1] = findSetValueIndex("线路距离II段时间", paramName, paramValue, index, device);
+    device->distanceTimeSetValue[2] = findSetValueIndex("线路距离III段时间", paramName, paramValue, index, device);
+    device->distanceTimeSetValue[3] = findSetValueIndex("线路距离保护返回时间", paramName, paramValue, index, device);
 
-    device->lineStartSetValue[0] = findSetValueIndex("线路电流突变量启动", paramName, paramValue, index); // 电流突变量启动
-    device->lineStartSetValue[1] = findSetValueIndex("线路零序电流启动", paramName, paramValue, index); // 零序电流启动
+    device->zeroSequenceEnable = (int) findSetValueIndex("线路零序过电流保护投入", paramName, paramValue, index, device);
 
-    device->overCurrentSetValue[0] = findSetValueIndex("线路过电流I段", paramName, paramValue, index);  // I段
-    device->overCurrentSetValue[1] = findSetValueIndex("线路过电流II段", paramName, paramValue, index);  // II段
-    device->overCurrentSetValue[2] = findSetValueIndex("线路过电流III段", paramName, paramValue, index);  // III段
-
-    device->overCurrentTimeSetValue[0] = findSetValueIndex("线路过电流I段时间", paramName, paramValue, index); // I段延时20ms
-    device->overCurrentTimeSetValue[1] = findSetValueIndex("线路过电流II段时间", paramName, paramValue, index); // II段
-    device->overCurrentTimeSetValue[2] = findSetValueIndex("线路过电流III段时间", paramName, paramValue, index); // III段
-    device->overCurrentTimeSetValue[3] = findSetValueIndex("线路过电流保护返回时间", paramName, paramValue, index); // 返回
-
-    device->distanceSetValue[0] = findSetValueIndex("线路距离I段", paramName, paramValue, index);
-    device->distanceSetValue[1] = findSetValueIndex("线路距离II段", paramName, paramValue, index);
-    device->distanceSetValue[2] = findSetValueIndex("线路距离III段", paramName, paramValue, index);
-
-    device->distanceTimeSetValue[0] = findSetValueIndex("线路距离I段时间", paramName, paramValue, index);
-    device->distanceTimeSetValue[1] = findSetValueIndex("线路距离II段时间", paramName, paramValue, index);
-    device->distanceTimeSetValue[2] = findSetValueIndex("线路距离III段时间", paramName, paramValue, index);
-    device->distanceTimeSetValue[3] = findSetValueIndex("线路距离保护返回时间", paramName, paramValue, index);
+    device->overCurrentEnable = (int)findSetValueIndex("线路过电流保护投入", paramName, paramValue, index, device);
+    device->overCurrentSetValue[0] = findSetValueIndex("线路过电流I段", paramName, paramValue, index, device);  // I段
+    device->overCurrentSetValue[1] = findSetValueIndex("线路过电流II段", paramName, paramValue, index, device);  // II段
+    device->overCurrentSetValue[2] = findSetValueIndex("线路过电流III段", paramName, paramValue, index, device);  // III段
+    device->overCurrentTimeSetValue[0] = findSetValueIndex("线路过电流I段时间", paramName, paramValue, index, device); // I段延时20ms
+    device->overCurrentTimeSetValue[1] = findSetValueIndex("线路过电流II段时间", paramName, paramValue, index, device); // II段
+    device->overCurrentTimeSetValue[2] = findSetValueIndex("线路过电流III段时间", paramName, paramValue, index, device); // III段
+    device->overCurrentTimeSetValue[3] = findSetValueIndex("线路过电流保护返回时间", paramName, paramValue, index, device); // 返回
+    
     return 0;
 }
 
@@ -232,14 +216,18 @@ int readConfiguration(Device* device) {
  * @param n
  * @return
  */
-double findSetValueIndex(char* target, char (*paramName)[50], double* paramValue, int n) {
+double findSetValueIndex(char* target, char (*paramName)[50], double* paramValue, int n, Device* device) {
     int i = 0;
+    char errorLog[100];
 
     for (i = 0; i < n; i++) {
         if (strcmp(target, *(paramName+i)) == 0) {
             return paramValue[i];
         }
     }
+    // 如果没有找到对应的整定值, 将错误信息记录到日志中
+    sprintf(errorLog, "%s%s", target, "参数未定义!");
+    writeErrorLog(device, errorLog);
     return 0;
 }
 
@@ -544,6 +532,30 @@ void writeLog(Device* device, char* content) {
                 fprintf(fp, "...OK\n");
                 fclose(fp);
                 fp = NULL;  
+            }
+        }
+    }
+}
+
+/**
+ * 写入错误日志信息
+ * @param device
+ * @param content
+ */
+void writeErrorLog(Device* device, char* content) {
+    if (content != NULL && notYet(device, content)) {
+        // 写日志
+        {
+            FILE *fp;
+            fp = fopen(device->globalFileName, "at+");
+            if (fp != NULL)
+            {
+                fprintf(fp, "[LOG-ERROR] Simulation Time: %fs [%s]: ", device->time, device->deviceName);
+
+                fprintf(fp, content);
+                fprintf(fp, "\n");
+                fclose(fp);
+                fp = NULL;
             }
         }
     }

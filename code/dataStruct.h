@@ -33,7 +33,7 @@ typedef struct Phasor {
 */
 typedef struct Device {
     // 装置是否启用
-    int onOff;
+    int deviceEnable;
 
     char globalFileName[100];
     char deviceFileName[100];
@@ -102,31 +102,35 @@ typedef struct Device {
     // 线路启动元件整定值: 0:电流突变量整定值  1:零序电流整定值  ...
     double lineStartSetValue[10];
 
-    
-    // 工频变化量距离
-    double deltaDistanceSetValue[10];
-    double deltaDistanceTimeSetValue[10];
-
-    // 过电流保护
-    double overCurrentSetValue[10];
-    double overCurrentTimeSetValue[10];
-    int overCurrentTripFlag[3];
-
-    // 距离保护
-    double distanceSetValue[10];
-    double distanceTimeSetValue[10];
-    int distanceTripFlag[3];
-    
     // 电流差动保护
+    int currentDiffEnable;
     double currentDiffSetValue[10];
     double currentDiffTimeSetValue[10];
     int currentDiffTripFlag[3];
 
+    // 工频变化量距离
+    int deltaDistanceEnable;
+    double deltaDistanceSetValue[10];
+    double deltaDistanceTimeSetValue[10];
+    int deltaDistanceTripFlag[3];
+
+    // 距离保护
+    int distanceEnable;
+    double distanceSetValue[10];
+    double distanceTimeSetValue[10];
+    int distanceTripFlag[3];
+
     // 零序电流保护
+    int zeroSequenceEnable;
     double zeroSequenceSetValue[10];
     double zeroSequenceTimeSetValue[10];
-    int zeroSequenceTripCount[3];    
-    
+    int zeroSequenceTripCount[3];
+
+    // 过电流保护
+    int overCurrentEnable;
+    double overCurrentSetValue[10];
+    double overCurrentTimeSetValue[10];
+    int overCurrentTripFlag[3];
 
     // 跳闸动作标志
     int tripFlag[3];

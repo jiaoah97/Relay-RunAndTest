@@ -21,7 +21,7 @@
     <param name="Warn" value="7" />
     <param name="Check" value="7" />
     <param name="description" value="" />
-    <param name="revisor" value="Zxy, 1578318986" />
+    <param name="revisor" value="Zxy, 1578560750" />
     <param name="startup_filename" value="" />
     <param name="labels" value="" />
     <param name="Source" value="" />
@@ -38,7 +38,7 @@
     </call>
   </hierarchy>
   <definitions>
-    <Definition classid="UserCmpDefn" name="relayDevice" group="" url="" version="" build="" crc="24176807" instances="1" key="" view="false" date="0">
+    <Definition classid="UserCmpDefn" name="relayDevice" group="" url="" version="" build="" crc="81522267" instances="1" key="" view="false" date="0">
       <paramlist name="">
         <param name="Description" value="" />
       </paramlist>
@@ -61,7 +61,7 @@
         <port model="Transfer" name="port1" x="-54" y="-18" dim="9" mode="Input" type="Real" internal="false"><![CDATA[true]]></port>
         <port model="Transfer" name="tripSignal" x="54" y="0" dim="3" mode="Output" type="Integer" internal="false"><![CDATA[true]]></port>
         <port model="Transfer" name="port2" x="-54" y="18" dim="9" mode="Input" type="Real" internal="false"><![CDATA[true]]></port>
-        <port model="Transfer" name="onoff" x="-18" y="-54" dim="1" mode="Input" type="Integer" internal="false"><![CDATA[true]]></port>
+        <port model="Transfer" name="deviceEnable" x="-18" y="-54" dim="1" mode="Input" type="Integer" internal="false"><![CDATA[true]]></port>
         <cond><![CDATA[true]]></cond>
         <rect x="-39" y="-39" width="78" height="78" stroke="black" stroke-width="0.2" stroke-dasharray="none" fill-style="Hollow" fill-fg="black" fill-bg="black" />
         <text x="0" y="-18" stroke="black" font-size="small" text-anchor="Middle"><![CDATA[保护装置模块]]></text>
@@ -78,10 +78,10 @@
         <line x1="-18" y1="-54" x2="-18" y2="-39" stroke="Black" stroke-width="0.2" stroke-dasharray="none" port="" />
         <line x1="-13" y1="-44" x2="-18" y2="-39" stroke="Black" stroke-width="0.2" stroke-dasharray="none" port="" />
         <line x1="-23" y1="-44" x2="-18" y2="-39" stroke="Black" stroke-width="0.2" stroke-dasharray="none" port="" />
-        <text x="-18" y="-54" stroke="black" font-size="Small" text-anchor="Middle">onoff</text>
+        <text x="-18" y="-59" stroke="black" font-size="Small" text-anchor="Middle">deviceEnable</text>
       </svg>
       <script>
-        <segment name="Fortran"><![CDATA[          CALL S1_LINE1(TIME,$ONOFF,$PORT1,$PORT2,$TRIPSIGNAL)]]></segment>
+        <segment name="Fortran"><![CDATA[          CALL S1_LINE1(TIME,$DEVICEENABLE,$PORT1,$PORT2,$TRIPSIGNAL)]]></segment>
         <segment name="Branch"><![CDATA[]]></segment>
         <segment name="Computations"><![CDATA[]]></segment>
       </script>
@@ -356,7 +356,7 @@
         </User>
       </schematic>
     </Definition>
-    <Definition classid="StationDefn" name="Station" group="" url="" version="" build="" crc="90301457" instances="1" key="" view="false">
+    <Definition classid="StationDefn" name="Station" group="" url="" version="" build="" crc="108130719" instances="1" key="" view="false">
       <paramlist name="">
         <param name="Description" value="" />
       </paramlist>
@@ -486,12 +486,12 @@
               <param name="ymax" value="1" />
             </paramlist>
             <paramlist link="1989205477" name="">
-              <param name="xmin" value="0.59" />
-              <param name="xmax" value="0.69" />
+              <param name="xmin" value="0" />
+              <param name="xmax" value="1.2" />
             </paramlist>
             <paramlist link="368581305" name="">
-              <param name="ymin" value="-400" />
-              <param name="ymax" value="400" />
+              <param name="ymin" value="0" />
+              <param name="ymax" value="1" />
             </paramlist>
             <paramlist link="1365244862" name="">
               <param name="ymin" value="-1" />
@@ -501,7 +501,7 @@
         </Wire>
       </schematic>
     </Definition>
-    <Definition classid="UserCmpDefn" name="Main" group="" url="" version="" build="" crc="79576929" instances="1" key="" view="false" date="1578317351">
+    <Definition classid="UserCmpDefn" name="Main" group="" url="" version="" build="" crc="82512870" instances="1" key="" view="false" date="1578317351">
       <paramlist name="">
         <param name="Description" value="" />
       </paramlist>
@@ -1557,7 +1557,7 @@
             <paramlist link="-1" name="">
               <param name="title" value="" />
               <param name="units" value="" />
-              <param name="gridvalue" value="100.000000" />
+              <param name="gridvalue" value="0.100000" />
               <param name="yintervalue" value="0.000000" />
               <param name="grid" value="true" />
               <param name="ticks" value="false" />
@@ -1568,14 +1568,14 @@
               <param name="trigger" value="false" />
               <param name="autocolor" value="false" />
               <param name="invertcolor" value="false" />
-              <param name="crosshair" value="false" />
+              <param name="crosshair" value="true" />
               <param name="manualscale" value="false" />
             </paramlist>
             <paramlist link="368581305" name="">
               <param name="ymin" value="-1" />
               <param name="ymax" value="1" />
             </paramlist>
-            <Curve classid="Curve" name="s1_line1" link="1054418414" color="0" bold="0" show="254" mode="0" />
+            <Curve classid="Curve" name="s1_line1" link="1054418414" color="0" bold="0" show="255" mode="0" />
             <Curve classid="Curve" name="I1" link="2022845773" color="0" bold="0" show="248" mode="0" />
           </Graph>
         </Frame>
@@ -1743,7 +1743,7 @@
           <vertex x="0" y="0" />
           <vertex x="180" y="0" />
         </Wire>
-        <User classid="UserCmp" name="500kV_Model:relayDevice" id="381874162" x="558" y="720" w="150" h="107" z="360" orient="0" defn="500kV_Model:relayDevice" link="-1">
+        <User classid="UserCmp" name="500kV_Model:relayDevice" id="381874162" x="558" y="720" w="150" h="112" z="360" orient="0" defn="500kV_Model:relayDevice" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="" />
           </paramlist>
@@ -1806,10 +1806,19 @@
             <param name="Value" value="1" />
           </paramlist>
         </User>
+        <Sticky classid="Sticky" x="468" y="540" w="90" h="54">
+          <paramlist>
+            <param name="font" value="1" />
+            <param name="align" value="0" />
+            <param name="style" value="1" />
+            <param name="arrows" value="2" />
+            <param name="fg_color" value="0" />
+            <param name="bg_color" value="15792890" />
+          </paramlist><![CDATA[装置投入开关]]></Sticky>
       </schematic>
     </Definition>
   </definitions>
-  <output name="500kV_Model" device="EMTDC" version="2010" date="2020/01/06" time="21:44:02.000000">
+  <output name="500kV_Model" device="EMTDC" version="2010" date="2020/01/09" time="17:05:24.000000">
     <paramlist />
     <domain name="Time" unit="s" mult="0.0" skew="0.0">
       <sample rate="23999.9808" end="24000" />

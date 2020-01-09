@@ -2,11 +2,11 @@
 
 void globalInit();
 
-void linkSimulation(Device* device, char* deviceName, double time, int onOff, double* port1, double* port2, int* tripSignal);
+void linkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* port1, double* port2, int* tripSignal);
 
-void deviceInit(Device* device, char* deviceName, int onOff);
+void deviceInit(Device* device, char* deviceName, int deviceEnable);
 int readConfiguration(Device* device);
-double findSetValueIndex(char* target, char (*paramName)[50], double* paramValue, int n);
+double findSetValueIndex(char* target, char (*paramName)[50], double* paramValue, int n, Device* device);
 
 int upTo10(Device* device);
 // 仿真采样
@@ -37,6 +37,7 @@ unsigned int SDBMHash(char *str, int arrLength);
 
 void writeLog(Device* device, char* content);
 void writeLogWithPhase(Device* device, char* content, int phase);
+void writeErrorLog(Device* device, char* content);
 
 Phasor memoryPhasorValue(Device* device, Phasor* memoryPhasors);
 

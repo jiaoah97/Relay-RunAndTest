@@ -1,6 +1,13 @@
 #include "..\\code\\dataStruct.h"
 #include "..\\code\\common.h"
 
+/**
+ * 过电流继电器
+ * @param device
+ * @param phase
+ */
+
+
 void overCurrentRelay(Device* device, int phase) {
     int* tripFlag;
     double startTime = device->startTime;
@@ -46,13 +53,4 @@ void overCurrentRelay(Device* device, int phase) {
         writeLogWithPhase(device, "%c相过电流保护III段动作", phase);
     }
 
-
-/*
-    // 保护返回
-    if ((time-startTime) > returnTimeSet) {
-        device->startFlag = 0;
-        *tripFlag = 0;
-        writeLogWithPhase(device, "c%相过电流保护返回", phase);
-    }
-    */
 }

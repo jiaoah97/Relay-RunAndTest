@@ -5,6 +5,8 @@ extern void lineStarter(Device* device, int phase);
 extern void deltaDistanceRelay(Device* device, int phase);
 extern void distanceRelay(Device* device, int phase);
 extern void overCurrentRelay(Device* device, int phase);
+extern void currentDiffRelay(Device* device, int phase);
+extern void zeroSeqCurrentRelay(Device* device, int phase);
 
 
 void line(Device* device) {
@@ -32,27 +34,64 @@ void line(Device* device) {
         }
     }
     
-    // 保护主判据, 使用计算得到的相量进行相关保护逻辑的实现
-    // code...
-    
-    // 工频变化量距离保护 三相
-    for (phase = 0; phase < 3; phase++) {
-        if (device->startFlag == 1) {
-            deltaDistanceRelay(device, phase);
+
+    /**
+     * 保护主判据, 使用计算得到的相量进行相关保护逻辑的实现
+     */
+
+    /**
+     * 差动保护
+     */
+    if (device->currentDiffEnable == 1) {
+        for (phase = 0; phase < 3; phase++) {
+            if (device->startFlag == 1) {
+                currentDiffRelay(device, phase);
+            }
         }
     }
 
-    // 距离保护 三相
-    for (phase = 0; phase < 3; phase++) {
-        if (device->startFlag == 1) {
-            distanceRelay(device, phase);
+    /**
+     * 工频变化量距离保护
+     */
+    if (device->deltaDistanceEnable == 1) {
+        for (phase = 0; phase < 3; phase++) {
+            if (device->startFlag == 1) {
+                deltaDistanceRelay(device, phase);
+            }
         }
     }
 
-    // 过电流保护 三相
-    for (phase = 0; phase < 3; phase++) {
-        if (device->startFlag == 1) {
-            overCurrentRelay(device, phase);
+
+    /**
+     * 距离保护
+     */
+    if (device->distanceEnable == 1) {
+        for (phase = 0; phase < 3; phase++) {
+            if (device->startFlag == 1) {
+                distanceRelay(device, phase);
+            }
+        }
+    }
+
+    /**
+     * 零序电流保护
+     */
+    if (device->zeroSequenceEnable == 1) {
+        for (phase = 0; phase < 3; phase++) {
+            if (device->startFlag == 1) {
+                zeroSeqCurrentRelay(device, phase);
+            }
+        }
+    }
+
+    /**
+     * 过电流保护
+     */
+    if (device->overCurrentEnable == 1) {
+        for (phase = 0; phase < 3; phase++) {
+            if (device->startFlag == 1) {
+                overCurrentRelay(device, phase);
+            }
         }
     }
 
@@ -64,6 +103,24 @@ void line(Device* device) {
     }
 
     /**
+     * 保护返回
+     * 启动后4s后, 执行返回逻辑
+     */
+    if (device->startFlag == 1 && device->time - device->startTime > 4) {
+        // 启动标志位置零
+        device->startFlag = 0;
+        // 各个保护标志位置零, 有必要设置各个保护跳闸标志位字段吗?
+
+        // 跳闸标志位置零
+        for (phase = 0; phase < 3; phase++) {
+            device->tripFlag[phase] = 0;
+        }
+        writeLog(device, "保护返回");
+    }
+
+
+
+    /**
      * 录波模块 启动后7个周波后, 将instIma一次写入
      */
     if ((device->startFlag == 1) && ((device->time-device->startTime)/0.02 > 7) && notYet(device, "数据录波")) {
@@ -71,9 +128,11 @@ void line(Device* device) {
         recordData(device);
     }
 
-    device->tripFlag[1] = device->phasor[0].real;
-    device->tripFlag[2] = memoryPhasorValue(device, device->memoryVma).real;
-
+    // 测试
+    /*
+        device->tripFlag[1] = device->phasor[0].real;
+        device->tripFlag[2] = memoryPhasorValue(device, device->memoryVma).real;
+    */
 
 
 
