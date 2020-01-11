@@ -98,8 +98,8 @@ int Trim(char s[])
 
 int readConfiguration(Device* device) {
     // 双数组 参数名-参数对应
-    char paramName[PARAMCOUNT][50];
-    double paramValue[PARAMCOUNT];
+    char paramName[PARAM_COUNT][50];
+    double paramValue[PARAM_COUNT];
     char fileName[50];
 
     int index = 0;

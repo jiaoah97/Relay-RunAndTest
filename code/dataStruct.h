@@ -5,32 +5,37 @@
 #define PI 3.1415926
 #define MAXSIZE 655350
 #define RECORD_LENGTH 10*POINTS
+#define QUEUE_LENGTH 100
 
 // 配置文件读取
-#define PARAMCOUNT 50
+#define PARAM_COUNT 50
 #define MAX_BUF_LEN 1024
 #define MAX_KEY_LEN 64
 #define MAX_VAL_LEN 256
 
 
-
-/*
-* 相量
-*/
+// 相量
 typedef struct Phasor {
     double real;
     double img;
 } Phasor;
 
+typedef struct DataPackage {
+    double delayTime;
+    double frame[9]; // 一个port的9维数据
+} DataPackage;
 
-/* 保护装置通用的数据结构--全局变量
-* sample, 本次12通道采样值
-* instVma, instVmb等数组: 瞬时值数组
-* phasor 本次相量计算结果
-* setValue数组: 通用整定值数组,具体每一个元素所代表的的整定值含义见各个保护的说明
-* relayTime数组, 通用延时数组 
-* relayFlag数组, 通用跳闸标记
-*/
+
+/**
+ * 保护装置通用的数据结构--全局变量
+ * sample, 本次12通道采样值
+ * instVma, instVmb等数组: 瞬时值数组
+ * phasor 本次相量计算结果
+ * setValue数组: 通用整定值数组,具体每一个元素所代表的的整定值含义见各个保护的说明
+ * relayTime数组, 通用延时数组
+ * relayFlag数组, 通用跳闸标记
+ */
+
 typedef struct Device {
     // 装置是否启用
     int deviceEnable;
@@ -46,6 +51,12 @@ typedef struct Device {
     double sample[12];
     // 断路器状态采样,合位为1,断开为0
     int brkStatus[6];
+
+    DataPackage package1[QUEUE_LENGTH];
+    DataPackage package2[QUEUE_LENGTH];
+
+    double switchPort1[9];
+    double switchPort2[9];
 
     // 具体长度根据录波长度确定
     double instTime[RECORD_LENGTH];
