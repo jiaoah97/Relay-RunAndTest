@@ -129,10 +129,12 @@ void line(Device* device) {
     }
 
     // 测试
-    /*
-        device->tripFlag[1] = device->phasor[0].real;
-        device->tripFlag[2] = memoryPhasorValue(device, device->memoryVma).real;
-    */
+
+        //device->tripFlag[1] = device->phasor[0].real;
+        //device->tripFlag[2] = memoryPhasorValue(device, device->memoryVma).real;
+
+        device->tripFlag[1] = device->instVma[0];
+
 
 
 

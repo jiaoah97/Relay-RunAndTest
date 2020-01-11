@@ -18,12 +18,12 @@ extern double line(Device*); // 线路保护
 
 
 // 注意采用GFORTRAN,C函数名需要多一个下划线
-void s1_line1_(double* time, int* deviceEnable, double* port1, double* port2, int* tripSignal) {
+void s1_line1_(double* time, int* deviceEnable, double* port1, double* port2, double* tripSignal) {
     globalInit();
     linkSimulation(&s1_line1, "s1-line1", *time, *deviceEnable, port1, port2, tripSignal);
 }
 
-void s1_line2_(double* time, int* deviceEnable, double* port1, double* port2, int* tripSignal) {
+void s1_line2_(double* time, int* deviceEnable, double* port1, double* port2, double* tripSignal) {
     linkSimulation(&s1_line2, "s1-line2", *time, *deviceEnable, port1, port2, tripSignal);
 }
 

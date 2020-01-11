@@ -6,6 +6,7 @@
 #define MAXSIZE 655350
 #define RECORD_LENGTH 10*POINTS
 #define QUEUE_LENGTH 100
+#define MAX_VALUE 65535
 
 // 配置文件读取
 #define PARAM_COUNT 50
@@ -44,7 +45,8 @@ typedef struct Device {
     char deviceFileName[100];
     char deviceName[40];
     // 采样计数器, 用于仿真10次, 保护装置跑一次
-    int sampleCount;
+    int sampleCount1; // 保护装置
+    int sampleCount2; // 交换机
 
 
     double time;
@@ -52,8 +54,15 @@ typedef struct Device {
     // 断路器状态采样,合位为1,断开为0
     int brkStatus[6];
 
-    DataPackage package1[QUEUE_LENGTH];
-    DataPackage package2[QUEUE_LENGTH];
+    // 交换机延时范围(最大延时)
+    double switchRelayTime1;
+    double switchRelayTime2;
+
+    DataPackage switchQueue1[QUEUE_LENGTH];
+    DataPackage switchQueue2[QUEUE_LENGTH];
+
+    int queueLength1;
+    int queueLength2;
 
     double switchPort1[9];
     double switchPort2[9];
@@ -144,10 +153,11 @@ typedef struct Device {
     int overCurrentTripFlag[3];
 
     // 跳闸动作标志
-    int tripFlag[3];
+    double tripFlag[3];
 
     // 唯一执行语句标志位
     int notYetFlag[MAXSIZE];
+
 
    
 } Device;

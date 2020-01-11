@@ -35,22 +35,88 @@ void globalInit() {
 
 }
 
+/**
+ * 交换机排队及延时
+ */
+ void switchRelay(Device* device, double time, double* port1, double* port2) {
+
+    //double maxRelay1 = 0.002;
+    //double random1 = rand()%20000 / 20000.0 * maxRelay1;  // 模拟较长固定延时
+
+    double random1 = 0;
+    double random2 = 0; // 固定延时为3个仿真步长左右
+    int i, j;
+
+    int q1 = device->queueLength1;
+    int q2 = device->queueLength2;
+
+    // 维护指示队列长度的计数器qLength
+    // 新到达的数据包放到switchQueue[qLength]位置
+    // 仿真10次, 执行一次采样函数, 更新交换机队列
+    if (upTo10B(device)) {
+        device->switchQueue1[q1].delayTime = time + random1;
+        device->switchQueue2[q2].delayTime = time + random2;
+
+        for (i = 0; i < 9; ++i) {
+            device->switchQueue1[q1].frame[i] = port1[i];
+            device->switchQueue2[q2].frame[i] = port2[i];
+        }
+        if (q1 <= QUEUE_LENGTH-2) {
+            device->queueLength1++;
+        }
+        if (q2 <= QUEUE_LENGTH-2) {
+            device->queueLength2++;
+        }
+    }
+
+
+    // 每次仿真都执行
+    // 如果判定需要输出, 从队头(0索引位置)取数, 更新队列, 更新交换机端口switchPort
+    if (device->queueLength1 > 0 && device->switchQueue1[0].delayTime <= time) {
+        // 延时到达, 可以输出
+        for (i = 0; i < 9; ++i) {
+            device->switchPort1[i] = device->switchQueue1[0].frame[i];
+        }
+        // 更新队列
+        for (i = 0; i < device->queueLength1; i++) {
+            device->switchQueue1[i] = device->switchQueue1[i+1];
+        }
+        device->switchQueue1[device->queueLength1].delayTime = MAX_VALUE;
+        device->queueLength1--;
+    }
+
+    if (device->queueLength2 > 0 && device->switchQueue2[0].delayTime <= time) {
+        // 延时到达, 可以输出
+        for (i = 0; i < 9; ++i) {
+            device->switchPort2[i] = device->switchQueue2[0].frame[i];
+        }
+        // 更新队列
+        for (i = 0; i < device->queueLength2; i++) {
+            device->switchQueue2[i] = device->switchQueue2[i+1];
+        }
+        device->switchQueue2[device->queueLength2].delayTime = MAX_VALUE;
+        device->queueLength2--;
+    }
+
+ }
 
 /**
  * 仿真链接函数
  * 综合以下功能
  * 初始化/仿真步长设置/跳闸指令
  */
-void linkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* port1, double* port2, int* tripSignal) {
+void linkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* port1, double* port2, double* tripSignal) {
     // 设置整定值
     if (notYet(device, "设置保护装置名及保护定值")) {
         deviceInit(device, deviceName, deviceEnable);
     }
 
+    switchRelay(device, time, port1, port2);
+
     // 只有装置启用情况下才进行计算
     // 仿真程序跑10次, 进行一次采样和保护计算
-    if (device->deviceEnable == 1 && upTo10(device) == 1) {
-        sample(device, time, port1, port2);
+    if (device->deviceEnable == 1 && upTo10A(device) == 1) {
+        sample(device, time, device->switchPort1, device->switchPort2);
         line(device);
     }
 
@@ -77,6 +143,9 @@ void deviceInit(Device* device, char* deviceName, int deviceEnable){
 
         // 读取配置文件, 设置整定值
         readConfiguration(device);
+
+        // 初始化交换机队列时间延时默认值MAX_VALUE
+        initSwitchQueueTime(device);
 
         // 初始化完毕,记录日志
         writeLog(device, "装置初始化");
@@ -177,6 +246,8 @@ int readConfiguration(Device* device) {
         // printf("%s=%s\n", _paramk, _paramv);
     }
 
+    device->switchRelayTime1 = findSetValueIndex("交换机A最大允许延时", paramName, paramValue, index, device);
+    device->switchRelayTime2 = findSetValueIndex("交换机B最大允许延时", paramName, paramValue, index, device);
 
     device->lineStartSetValue[0] = findSetValueIndex("线路电流突变量启动", paramName, paramValue, index, device); // 电流突变量启动
     device->lineStartSetValue[1] = findSetValueIndex("线路零序电流启动", paramName, paramValue, index, device); // 零序电流启动
@@ -232,15 +303,35 @@ double findSetValueIndex(char* target, char (*paramName)[50], double* paramValue
 }
 
 
-int upTo10(Device* device) {
-    device->sampleCount++;
-    if (device->sampleCount == 10) {
-        device->sampleCount = 0;
+void initSwitchQueueTime(Device* device) {
+    int i = 0;
+    for (i = 0; i < QUEUE_LENGTH; i++) {
+        device->switchQueue1[i].delayTime = MAX_VALUE;
+        device->switchQueue2[i].delayTime = MAX_VALUE;
+    }
+}
+
+
+int upTo10A(Device* device) {
+    device->sampleCount1++;
+    if (device->sampleCount1 == 10) {
+        device->sampleCount1 = 0;
         return 1;
     } else {
         return 0;
     }
 }
+
+int upTo10B(Device* device) {
+    device->sampleCount2++;
+    if (device->sampleCount2 == 10) {
+        device->sampleCount2 = 0;
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 
 
 // 仿真采样
