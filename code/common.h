@@ -25,15 +25,18 @@ void dataFilter(Device*);
 
 void toPhasor(Device*);
 
+Phasor phasorAdd(Phasor pa, Phasor pb);
+Phasor phasorSub(Phasor pa, Phasor pb);
+Phasor phasorMulti(Phasor pa, Phasor pb);
+Phasor phasorDiv(Phasor pa, Phasor pb);
 
 double phasorAbs(Phasor p);
-Phasor phasorAdd(Phasor pa, Phasor pb);
-Phasor phasorSub(Phasor, Phasor);
-Phasor phasorMulti(double a, Phasor p);
+double phasorAngle(Phasor p);
+Phasor phasorNumMulti(double a, Phasor p);
+double phasorAngleDiff(Phasor pa, Phasor pb);
 
 Phasor phasorContrarotate(Phasor p, double angle);
 Phasor phasorSeq(Phasor pa, Phasor pb, Phasor pc, int seq);
-double phasorAngleDiff(Phasor pa, Phasor pb);
 
 void lowPassFilter(double* aft, double* bef);
 

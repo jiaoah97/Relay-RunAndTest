@@ -21,7 +21,7 @@
     <param name="Warn" value="7" />
     <param name="Check" value="7" />
     <param name="description" value="" />
-    <param name="revisor" value="Zxy, 1578744612" />
+    <param name="revisor" value="Zxy, 1578893020" />
     <param name="startup_filename" value="" />
     <param name="labels" value="" />
     <param name="Source" value="" />
@@ -404,7 +404,7 @@
         </User>
       </schematic>
     </Definition>
-    <Definition classid="StationDefn" name="Station" group="" url="" version="" build="" crc="10716306" instances="1" key="" view="false">
+    <Definition classid="StationDefn" name="Station" group="" url="" version="" build="" crc="23838913" instances="1" key="" view="false">
       <paramlist name="">
         <param name="Description" value="" />
       </paramlist>
@@ -554,8 +554,8 @@
               <param name="ymax" value="500" />
             </paramlist>
             <paramlist link="574705270" name="">
-              <param name="xmin" value="0.23" />
-              <param name="xmax" value="0.28" />
+              <param name="xmin" value="0.176858190709" />
+              <param name="xmax" value="0.199358190709" />
             </paramlist>
             <paramlist link="636447596" name="">
               <param name="ymin" value="-600" />
@@ -565,7 +565,7 @@
         </Wire>
       </schematic>
     </Definition>
-    <Definition classid="UserCmpDefn" name="Main" group="" url="" version="" build="" crc="21188288" instances="1" key="" view="false" date="1578743615">
+    <Definition classid="UserCmpDefn" name="Main" group="" url="" version="" build="" crc="88196976" instances="1" key="" view="false" date="1578744918">
       <paramlist name="">
         <param name="Description" value="" />
       </paramlist>
@@ -639,7 +639,7 @@
             <param name="Collect" value="1" />
           </paramlist>
         </User>
-        <User classid="UserCmp" name="" defn="master:var" id="961264168" x="1440" y="216" w="34" h="29" z="70" orient="5" link="-1">
+        <User classid="UserCmp" name="" defn="master:var" id="961264168" x="1440" y="216" w="34" h="29" z="110" orient="5" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="Ph Angle" />
             <param name="Group" value="SS2" />
@@ -651,7 +651,7 @@
             <param name="Collect" value="1" />
           </paramlist>
         </User>
-        <User classid="UserCmp" name="" defn="master:var" id="14615980" x="1494" y="216" w="34" h="29" z="80" orient="5" link="-1">
+        <User classid="UserCmp" name="" defn="master:var" id="14615980" x="1494" y="216" w="34" h="29" z="120" orient="5" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="Voltage" />
             <param name="Group" value="SS2" />
@@ -778,7 +778,7 @@
           <vertex x="0" y="0" />
           <vertex x="72" y="0" />
         </Wire>
-        <User classid="UserCmp" defn="master:tfaultn" id="945898589" x="882" y="270" w="74" h="54" z="60" orient="4" link="-1">
+        <User classid="UserCmp" defn="master:tfaultn" id="945898589" x="882" y="270" w="74" h="54" z="100" orient="4" link="-1">
           <paramlist link="-1" name="">
             <param name="TF" value="0.3 [s]" />
             <param name="DF" value="0.1 [s]" />
@@ -793,7 +793,7 @@
           <vertex x="0" y="0" />
           <vertex x="72" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:pgb" id="2022845773" x="198" y="324" w="36" h="37" z="50" orient="0" defn="master:pgb" link="-1">
+        <User classid="UserCmp" name="master:pgb" id="2022845773" x="198" y="324" w="36" h="37" z="70" orient="0" defn="master:pgb" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="I1" />
             <param name="Group" value="" />
@@ -815,7 +815,7 @@
           <vertex x="0" y="0" />
           <vertex x="72" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:pgb" id="1210460729" x="198" y="360" w="36" h="37" z="90" orient="0" defn="master:pgb" link="-1">
+        <User classid="UserCmp" name="master:pgb" id="1210460729" x="198" y="360" w="36" h="37" z="150" orient="0" defn="master:pgb" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="V1" />
             <param name="Group" value="" />
@@ -837,7 +837,7 @@
           <vertex x="0" y="0" />
           <vertex x="72" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:pgb" id="1749485402" x="198" y="396" w="36" h="37" z="100" orient="0" defn="master:pgb" link="-1">
+        <User classid="UserCmp" name="master:pgb" id="1749485402" x="198" y="396" w="36" h="37" z="170" orient="0" defn="master:pgb" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="I2" />
             <param name="Group" value="" />
@@ -859,7 +859,7 @@
           <vertex x="0" y="0" />
           <vertex x="72" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:pgb" id="189422913" x="198" y="432" w="36" h="37" z="110" orient="0" defn="master:pgb" link="-1">
+        <User classid="UserCmp" name="master:pgb" id="189422913" x="198" y="432" w="36" h="37" z="180" orient="0" defn="master:pgb" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="V2" />
             <param name="Group" value="" />
@@ -1310,7 +1310,7 @@
           <vertex x="0" y="0" />
           <vertex x="-54" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:consti" id="528128726" x="648" y="288" w="67" h="17" z="140" orient="0" defn="master:consti" link="-1">
+        <User classid="UserCmp" name="master:consti" id="528128726" x="648" y="288" w="67" h="17" z="90" orient="0" defn="master:consti" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="" />
             <param name="Value" value="0" />
@@ -1325,7 +1325,7 @@
           <vertex x="0" y="0" />
           <vertex x="-54" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:consti" id="1673253013" x="648" y="306" w="67" h="17" z="160" orient="0" defn="master:consti" link="-1">
+        <User classid="UserCmp" name="master:consti" id="1673253013" x="648" y="306" w="67" h="17" z="140" orient="0" defn="master:consti" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="" />
             <param name="Value" value="0" />
@@ -1340,7 +1340,7 @@
           <vertex x="0" y="0" />
           <vertex x="54" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:consti" id="1644841506" x="1350" y="216" w="68" h="17" z="150" orient="4" defn="master:consti" link="-1">
+        <User classid="UserCmp" name="master:consti" id="1644841506" x="1350" y="216" w="68" h="17" z="80" orient="4" defn="master:consti" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="" />
             <param name="Value" value="0" />
@@ -1355,7 +1355,7 @@
           <vertex x="0" y="0" />
           <vertex x="54" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:consti" id="1881210059" x="1350" y="234" w="68" h="17" z="170" orient="4" defn="master:consti" link="-1">
+        <User classid="UserCmp" name="master:consti" id="1881210059" x="1350" y="234" w="68" h="17" z="130" orient="4" defn="master:consti" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="" />
             <param name="Value" value="0" />
@@ -1370,7 +1370,7 @@
           <vertex x="0" y="0" />
           <vertex x="54" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:consti" id="704073715" x="1350" y="252" w="68" h="17" z="180" orient="4" defn="master:consti" link="-1">
+        <User classid="UserCmp" name="master:consti" id="704073715" x="1350" y="252" w="68" h="17" z="160" orient="4" defn="master:consti" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="" />
             <param name="Value" value="0" />
@@ -1380,7 +1380,7 @@
           <vertex x="0" y="0" />
           <vertex x="-54" y="0" />
         </Wire>
-        <User classid="UserCmp" defn="master:buffer" id="1341071881" x="648" y="270" w="38" h="28" z="130" orient="0" link="-1">
+        <User classid="UserCmp" defn="master:buffer" id="1341071881" x="648" y="270" w="38" h="28" z="60" orient="0" link="-1">
           <paramlist link="-1" name="">
             <param name="HI" value="0.9" />
             <param name="LO" value="-0.2" />
@@ -1480,7 +1480,7 @@
           <vertex x="0" y="0" />
           <vertex x="18" y="0" />
         </Wire>
-        <User classid="UserCmp" name="master:const" id="46214720" x="612" y="270" w="67" h="17" z="120" orient="0" defn="master:const" link="-1">
+        <User classid="UserCmp" name="master:const" id="46214720" x="612" y="270" w="67" h="17" z="50" orient="0" defn="master:const" link="-1">
           <paramlist link="-1" name="">
             <param name="Name" value="" />
             <param name="Value" value="0" />
@@ -2137,7 +2137,7 @@
       </schematic>
     </Definition>
   </definitions>
-  <output name="500kV_Model" device="EMTDC" version="2010" date="2020/01/11" time="20:07:53.000000">
+  <output name="500kV_Model" device="EMTDC" version="2010" date="2020/01/13" time="13:19:38.000000">
     <paramlist />
     <domain name="Time" unit="s" mult="0.0" skew="0.0">
       <sample rate="23999.9808" end="24000" />

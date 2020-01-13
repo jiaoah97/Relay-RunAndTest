@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <direct.h>
+#include <complex.h>
 #include "..\\code\\dataStruct.h"
 #include "..\\code\\common.h"
 
@@ -525,6 +526,32 @@ double phasorAbs(Phasor p) {
     return sqrt(p.real*p.real + p.img*p.img);
 }
 
+
+/**
+ * 相量角度
+ * 角度值(°)
+ */
+double phasorAngle(Phasor p){
+    double temp;
+
+    temp = atan2(p.img, p.real) * 180.0 / PI;
+    temp = temp < -0.00001 ? temp+360 : temp;
+
+    return temp;
+}
+
+
+/**
+ * 计算常数与相量乘积
+ */
+Phasor phasorNumMulti(double a, Phasor p) {
+    p.real *= a;
+    p.img *= a;
+
+    return p;
+}
+
+
 Phasor phasorAdd(Phasor pa, Phasor pb) {
     Phasor p;
 
@@ -543,16 +570,39 @@ Phasor phasorSub(Phasor pa, Phasor pb) {
     return p;
 }
 
-
 /**
- * 计算常数与相量乘积
+ * 相量乘法
  */
-Phasor phasorMulti(double a, Phasor p) {
-    p.real *= a;
-    p.img *= a;
+Phasor phasorMulti(Phasor pa, Phasor pb){
+    Phasor p;
+    double a = pa.real;
+    double b = pa.img;
+    double c = pb.real;
+    double d = pb.img;
+
+    p.real = a * c - b * d;
+    p.img = a * d + b * c;
 
     return p;
 }
+
+
+/**
+ * 相量除法
+ */
+Phasor phasorDiv(Phasor pa, Phasor pb){
+    Phasor p;
+    double a = pa.real;
+    double b = pa.img;
+    double c = pb.real;
+    double d = pb.img;
+
+    p.real = (a * c + b * d) / (c * c + d * d);
+    p.img = (b * c - a * d) / (c * c + d * d);
+
+    return p;
+}
+
 
 /**
  * 逆时针旋转相量
@@ -600,7 +650,7 @@ Phasor phasorSeq(Phasor pa, Phasor pb, Phasor pc, int seq) {
     }
 
     sum = phasorAdd(rpa, phasorAdd(rpb, rpc));
-    return phasorMulti(1/3.0, sum);
+    return phasorNumMulti(1/3.0, sum);
 }
 
 

@@ -21,7 +21,7 @@
     <param name="Warn" value="7" />
     <param name="Check" value="7" />
     <param name="description" value="" />
-    <param name="revisor" value="Zxy, 1578795718" />
+    <param name="revisor" value="Zxy, 1578893980" />
     <param name="startup_filename" value="" />
     <param name="labels" value="" />
     <param name="Source" value="" />
@@ -404,7 +404,7 @@
         </User>
       </schematic>
     </Definition>
-    <Definition classid="StationDefn" name="Station" group="" url="" version="" build="" crc="12695346" instances="1" key="" view="false">
+    <Definition classid="StationDefn" name="Station" group="" url="" version="" build="" crc="43923946" instances="1" key="" view="false">
       <paramlist name="">
         <param name="Description" value="" />
       </paramlist>
@@ -554,8 +554,8 @@
               <param name="ymax" value="500" />
             </paramlist>
             <paramlist link="574705270" name="">
-              <param name="xmin" value="0.244032258065" />
-              <param name="xmax" value="0.354032258065" />
+              <param name="xmin" value="0.236607579462" />
+              <param name="xmax" value="0.259107579462" />
             </paramlist>
             <paramlist link="636447596" name="">
               <param name="ymin" value="-600" />
@@ -2137,7 +2137,7 @@
       </schematic>
     </Definition>
   </definitions>
-  <output name="500kV_Model" device="EMTDC" version="2010" date="2020/01/12" time="10:21:33.000000">
+  <output name="500kV_Model" device="EMTDC" version="2010" date="2020/01/13" time="13:19:38.000000">
     <paramlist />
     <domain name="Time" unit="s" mult="0.0" skew="0.0">
       <sample rate="23999.9808" end="24000" />

@@ -39,8 +39,8 @@ void distanceRelay(Device* device, int phase) {
 
 
     // I段
-    x = phasorSub(U, phasorMulti(0.5*Z1set, I));
-    y = phasorMulti(0.5*Z1set, I);
+    x = phasorSub(U, phasorNumMulti(0.5*Z1set, I));
+    y = phasorNumMulti(0.5*Z1set, I);
 
     if ((time-startTime) > t1set && (phasorAbs(x) - phasorAbs(y)) < 0 ) {
         device->distanceTripFlag[phase] = 1;
@@ -49,8 +49,8 @@ void distanceRelay(Device* device, int phase) {
 
  
     // II段
-    x = phasorSub(U, phasorMulti(0.5*Z2set, I));
-    y = phasorMulti(0.5*Z2set, I);
+    x = phasorSub(U, phasorNumMulti(0.5*Z2set, I));
+    y = phasorNumMulti(0.5*Z2set, I);
 
     if ((time-startTime) > t2set && (phasorAbs(x) - phasorAbs(y)) < 0 ) {
         device->distanceTripFlag[phase] = 1;
@@ -59,8 +59,8 @@ void distanceRelay(Device* device, int phase) {
 
 
     // III段
-    x = phasorSub(U, phasorMulti(0.5*Z3set, I));
-    y = phasorMulti(0.5*Z3set, I);
+    x = phasorSub(U, phasorNumMulti(0.5*Z3set, I));
+    y = phasorNumMulti(0.5*Z3set, I);
 
     if ((time-startTime) > t3set && (phasorAbs(x) - phasorAbs(y)) < 0 ) {
         device->distanceTripFlag[phase] = 1;
