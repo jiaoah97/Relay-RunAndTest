@@ -2,17 +2,19 @@
 
 void globalInit();
 
-void switchRelay(Device* device, double time, double* port1, double* port2);
+void switchRelay(Device* device, double time, const double* port1, const double* port2);
 
-void linkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* port1, double* port2, double* tripSignal);
+void lineLinkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* port1, double* port2, double* tripSignal);
+void busLinkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* tripSignal);
+
 
 void deviceInit(Device* device, char* deviceName, int deviceEnable);
-int readConfiguration(Device* device);
+int readConfiguration(Device* device, char elementType);
 void initSwitchQueueTime(Device* device);
-double findSetValueIndex(char* target, char (*paramName)[50], double* paramValue, int n, Device* device);
+double findSetValueIndex(char* target, char (*paramName)[STRING_LENGTH], double* paramValue, int n, Device* device);
 
 int upTo10A(Device* device);
-int upTo10B(Device* device);
+int upTo5(Device* device);
 
 // 仿真采样
 void sample(Device* device, double time, double* input, double* brk);

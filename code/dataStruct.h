@@ -5,8 +5,9 @@
 #define PI 3.1415926
 #define MAXSIZE 655350
 #define RECORD_LENGTH 10*POINTS
-#define QUEUE_LENGTH 100
+#define QUEUE_LENGTH 1*POINTS
 #define MAX_VALUE 65535
+#define STRING_LENGTH 100
 
 // 配置文件读取
 #define PARAM_COUNT 50
@@ -41,9 +42,9 @@ typedef struct Device {
     // 装置是否启用
     int deviceEnable;
 
-    char globalFileName[100];
-    char deviceFileName[100];
-    char deviceName[40];
+    char globalFileName[STRING_LENGTH];
+    char deviceFileName[STRING_LENGTH];
+    char deviceName[STRING_LENGTH];
     // 采样计数器, 用于仿真10次, 保护装置跑一次
     int sampleCount1; // 保护装置
     int sampleCount2; // 交换机
@@ -55,8 +56,10 @@ typedef struct Device {
     int brkStatus[6];
 
     // 交换机延时范围(最大延时)
-    double switchRelayTime1;
-    double switchRelayTime2;
+    double switch1DelayMin;
+    double switch1DelayMax;
+    double switch2DelayMin;
+    double switch2DelayMax;
 
     DataPackage switchQueue1[QUEUE_LENGTH];
     DataPackage switchQueue2[QUEUE_LENGTH];
@@ -158,6 +161,11 @@ typedef struct Device {
     // 唯一执行语句标志位
     int notYetFlag[MAXSIZE];
 
+
+/**
+ * 以下为母线保护相关数据结构
+ */
+    struct Device* busRange[10];
 
    
 } Device;
