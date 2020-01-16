@@ -9,6 +9,7 @@
 #include "..\\code\\common.h"
 
 // 声明各类保护函数
+extern Device s1_lines[5];
 extern void line(Device*); // 线路保护
 extern char logDirName[STRING_LENGTH];
 extern int globalInitFlag;
@@ -33,7 +34,6 @@ void globalInit() {
         mkdir(logDirName);
         globalInitFlag = 1;
     }
-
 }
 
 /**
@@ -130,7 +130,7 @@ void globalInit() {
 void lineLinkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* port1, double* port2, double* tripSignal) {
     // 设置整定值
     if (notYet(device, "设置保护装置名及保护定值")) {
-        deviceInit(device, deviceName, deviceEnable);
+        deviceInit(device, deviceName, deviceEnable, 'L');
     }
 
     switchRelay(device, time, port1, port2);
@@ -149,7 +149,24 @@ void lineLinkSimulation(Device* device, char* deviceName, double time, int devic
 
 }
 
-void deviceInit(Device* device, char* deviceName, int deviceEnable){
+
+/**
+ * 母线链接函数
+ */
+
+void busLinkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* tripSignal) {
+    // 设置整定值
+    if (notYet(device, "设置保护装置名及保护定值")) {
+        deviceInit(device, deviceName, deviceEnable, 'B');
+        tripSignal[1] = 20.5;
+    }
+
+    tripSignal[0] = 11;
+
+}
+
+
+void deviceInit(Device* device, char* deviceName, int deviceEnable, char type){
     // 设置装置名
     if (deviceEnable == 0) {
         // 装置不启用
@@ -163,14 +180,19 @@ void deviceInit(Device* device, char* deviceName, int deviceEnable){
         sprintf(device->globalFileName, "%s/log.txt", logDirName); // 不同装置共用log.txt
         sprintf(device->deviceFileName, "%s/%s", logDirName, deviceName); // 不同装置录波文件分别存放, 按装置名分开
 
-        // 读取配置文件, 设置整定值
-        readConfiguration(device, 'L');
+        if (type == 'L') {
+            // 读取配置文件, 设置整定值
+            readConfiguration(device, 'L');
 
-        // 初始化交换机队列时间延时默认值MAX_VALUE
-        initSwitchQueueTime(device);
+            // 初始化交换机队列时间延时默认值MAX_VALUE
+            initSwitchQueueTime(device);
 
-        // 初始化完毕,记录日志
-        writeLog(device, "线路保护装置初始化");
+            // 初始化完毕,记录日志
+            writeLog(device, "线路保护装置初始化");
+        } else if (type == 'B') {
+            readConfiguration(device, 'B');
+        }
+
     }
 
 }
@@ -193,7 +215,7 @@ int readConfiguration(Device* device, char elementType) {
     double paramValue[PARAM_COUNT];
     char fileName[STRING_LENGTH];
 
-    int index = 0;
+    int count = 0;
     int i, j;
 
     // 根据device中的deviceName打开对应的配置文件并进行赋值
@@ -262,50 +284,54 @@ int readConfiguration(Device* device, char elementType) {
         if (strcmp(_paramk, "") == 0 || strcmp(_paramv, "") == 0)
             continue;
 
-        sprintf(paramName[index], _paramk);
-        paramValue[index] = atof(_paramv);
-        index++;
+        sprintf(paramName[count], _paramk);
+        paramValue[count] = atof(_paramv);
+        count++;
         // printf("%s=%s\n", _paramk, _paramv);
     }
 
     if (elementType == 'L') {
-        device->switch1DelayMin = findSetValueIndex("交换机A最小延时", paramName, paramValue, index, device);
-        device->switch1DelayMax = findSetValueIndex("交换机A最大延时", paramName, paramValue, index, device);
-        device->switch2DelayMin = findSetValueIndex("交换机B最小延时", paramName, paramValue, index, device);
-        device->switch2DelayMax = findSetValueIndex("交换机B最大延时", paramName, paramValue, index, device);
+        device->switch1DelayMin = findSetValueIndex("交换机A最小延时", paramName, paramValue, count, device);
+        device->switch1DelayMax = findSetValueIndex("交换机A最大延时", paramName, paramValue, count, device);
+        device->switch2DelayMin = findSetValueIndex("交换机B最小延时", paramName, paramValue, count, device);
+        device->switch2DelayMax = findSetValueIndex("交换机B最大延时", paramName, paramValue, count, device);
 
-        device->lineStartSetValue[0] = findSetValueIndex("线路电流突变量启动", paramName, paramValue, index, device); // 电流突变量启动
-        device->lineStartSetValue[1] = findSetValueIndex("线路零序电流启动", paramName, paramValue, index, device); // 零序电流启动
+        device->lineStartSetValue[0] = findSetValueIndex("线路电流突变量启动", paramName, paramValue, count, device); // 电流突变量启动
+        device->lineStartSetValue[1] = findSetValueIndex("线路零序电流启动", paramName, paramValue, count, device); // 零序电流启动
 
-        device->currentDiffEnable = (int) findSetValueIndex("线路电流差动保护投入", paramName, paramValue, index, device);
+        device->currentDiffEnable = (int) findSetValueIndex("线路电流差动保护投入", paramName, paramValue, count, device);
 
-        device->deltaDistanceEnable = (int) findSetValueIndex("线路工频变化量距离保护投入", paramName, paramValue, index, device);
+        device->deltaDistanceEnable = (int) findSetValueIndex("线路工频变化量距离保护投入", paramName, paramValue, count, device);
 
-        device->distanceEnable = (int) findSetValueIndex("线路距离保护投入", paramName, paramValue, index, device);
-        device->distanceSetValue[0] = findSetValueIndex("线路距离I段", paramName, paramValue, index, device);
-        device->distanceSetValue[1] = findSetValueIndex("线路距离II段", paramName, paramValue, index, device);
-        device->distanceSetValue[2] = findSetValueIndex("线路距离III段", paramName, paramValue, index, device);
-        device->distanceTimeSetValue[0] = findSetValueIndex("线路距离I段时间", paramName, paramValue, index, device);
-        device->distanceTimeSetValue[1] = findSetValueIndex("线路距离II段时间", paramName, paramValue, index, device);
-        device->distanceTimeSetValue[2] = findSetValueIndex("线路距离III段时间", paramName, paramValue, index, device);
-        device->distanceTimeSetValue[3] = findSetValueIndex("线路距离保护返回时间", paramName, paramValue, index, device);
+        device->distanceEnable = (int) findSetValueIndex("线路距离保护投入", paramName, paramValue, count, device);
+        device->distanceSetValue[0] = findSetValueIndex("线路距离I段", paramName, paramValue, count, device);
+        device->distanceSetValue[1] = findSetValueIndex("线路距离II段", paramName, paramValue, count, device);
+        device->distanceSetValue[2] = findSetValueIndex("线路距离III段", paramName, paramValue, count, device);
+        device->distanceTimeSetValue[0] = findSetValueIndex("线路距离I段时间", paramName, paramValue, count, device);
+        device->distanceTimeSetValue[1] = findSetValueIndex("线路距离II段时间", paramName, paramValue, count, device);
+        device->distanceTimeSetValue[2] = findSetValueIndex("线路距离III段时间", paramName, paramValue, count, device);
+        device->distanceTimeSetValue[3] = findSetValueIndex("线路距离保护返回时间", paramName, paramValue, count, device);
 
-        device->zeroSequenceEnable = (int) findSetValueIndex("线路零序过电流保护投入", paramName, paramValue, index, device);
+        device->zeroSequenceEnable = (int) findSetValueIndex("线路零序过电流保护投入", paramName, paramValue, count, device);
 
-        device->overCurrentEnable = (int)findSetValueIndex("线路过电流保护投入", paramName, paramValue, index, device);
-        device->overCurrentSetValue[0] = findSetValueIndex("线路过电流I段", paramName, paramValue, index, device);  // I段
-        device->overCurrentSetValue[1] = findSetValueIndex("线路过电流II段", paramName, paramValue, index, device);  // II段
-        device->overCurrentSetValue[2] = findSetValueIndex("线路过电流III段", paramName, paramValue, index, device);  // III段
-        device->overCurrentTimeSetValue[0] = findSetValueIndex("线路过电流I段时间", paramName, paramValue, index, device); // I段延时20ms
-        device->overCurrentTimeSetValue[1] = findSetValueIndex("线路过电流II段时间", paramName, paramValue, index, device); // II段
-        device->overCurrentTimeSetValue[2] = findSetValueIndex("线路过电流III段时间", paramName, paramValue, index, device); // III段
-        device->overCurrentTimeSetValue[3] = findSetValueIndex("线路过电流保护返回时间", paramName, paramValue, index, device); // 返回
+        device->overCurrentEnable = (int)findSetValueIndex("线路过电流保护投入", paramName, paramValue, count, device);
+        device->overCurrentSetValue[0] = findSetValueIndex("线路过电流I段", paramName, paramValue, count, device);  // I段
+        device->overCurrentSetValue[1] = findSetValueIndex("线路过电流II段", paramName, paramValue, count, device);  // II段
+        device->overCurrentSetValue[2] = findSetValueIndex("线路过电流III段", paramName, paramValue, count, device);  // III段
+        device->overCurrentTimeSetValue[0] = findSetValueIndex("线路过电流I段时间", paramName, paramValue, count, device); // I段延时20ms
+        device->overCurrentTimeSetValue[1] = findSetValueIndex("线路过电流II段时间", paramName, paramValue, count, device); // II段
+        device->overCurrentTimeSetValue[2] = findSetValueIndex("线路过电流III段时间", paramName, paramValue, count, device); // III段
+        device->overCurrentTimeSetValue[3] = findSetValueIndex("线路过电流保护返回时间", paramName, paramValue, count, device); // 返回
 
         writeLog(device, "读取线路保护定值");
     } else if (elementType == 'B') {
+        for (i = 0; i < count; i++) {
+//            if (paramValue[i] == 1) {
+//                device->busRange[device->lineCount] = &s1_lines[i];
+//                device->lineCount++;
+//            }
+        }
         writeLog(device, "读取母线保护定值");
-
-
     } else {
 
     }
@@ -850,47 +876,3 @@ void recordData(Device* device) {
     }
 }
 
-
-/**
- * 母线保护相关
- */
-
-void busLinkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* tripSignal) {
-    // 设置整定值
-    if (notYet(device, "设置保护装置名及保护定值")) {
-         // 设置装置名
-        if (deviceEnable == 0) {
-            // 装置不启用
-            device->deviceEnable = 0;
-        } else {
-            device->deviceEnable = 1;
-
-            strcpy(device->deviceName, deviceName);
-
-            // 设置globalFileName和deviceFileName
-            sprintf(device->globalFileName, "%s/log.txt", logDirName); // 不同装置共用log.txt
-            sprintf(device->deviceFileName, "%s/%s", logDirName, deviceName); // 不同装置录波文件分别存放, 按装置名分开
-
-            // 读取配置文件, 设置整定值
-            // 将涉及到的线路device变量加入到母线busRange数组中
-            readConfiguration(device, 'B');
-
-
-            // 初始化完毕,记录日志
-            writeLog(device, "母线保护装置初始化");
-        }
-
-    }
-
-    // 只有装置启用情况下才进行计算
-    // 仿真程序跑10次, 进行一次采样和保护计算
-    if (device->deviceEnable == 1 && upTo10A(device) == 1) {
-        
-    }
-
-    // 结果输出
-    tripSignal[0] = device->tripFlag[0]; 
-    tripSignal[1] = device->tripFlag[1]; 
-    tripSignal[2] = device->tripFlag[2];
-
-}

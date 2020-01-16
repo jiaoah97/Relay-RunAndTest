@@ -1,7 +1,7 @@
 // 每周波采样点数
 #define POINTS 48
 // 数据窗总长(包括记忆量) 4个周波
-#define WINDOW 192
+#define WINDOW 4*POINTS
 #define PI 3.1415926
 #define MAXSIZE 655350
 #define RECORD_LENGTH 10*POINTS
@@ -162,11 +162,13 @@ typedef struct Device {
     int notYetFlag[MAXSIZE];
 
 
-/**
- * 以下为母线保护相关数据结构
- */
-    struct Device* busRange[10];
 
+    /**
+     * 以下为母线保护用到的数据结构
+     */
+     struct Device* busRange[20];
+     // 标志位, 实际挂到该母线上的线路
+     // 母线上实际出线数量
+     int lineCount;
    
 } Device;
-

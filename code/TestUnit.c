@@ -8,9 +8,12 @@ double timeData[ROWSIZE];
 int deviceEnable[ROWSIZE];
 double port1[ROWSIZE][9];
 double port2[ROWSIZE][9];
-int tripSignal[ROWSIZE][3];
+double tripSignal[ROWSIZE][3];
 
-extern void s1_line1_(double* time, int* deviceEnable, double* port1, double* port2, int* tripSignal);
+extern void globalInit();
+extern void s1_line1_(double* time, int* deviceEnable, double* port1, double* port2, double* tripSignal);
+
+void s1_bus1_(double* time, int* deviceEnable, double* tripSignal);
 
 void readData(char* filename, double data[][COLSIZE], int row, int col) {
     FILE *fw = fopen(filename, "r");
@@ -69,6 +72,10 @@ int main()
     }
 
     for (i = 0; i < ROWSIZE; i++) {
+        globalInit();
+
         s1_line1_(&timeData[i], &deviceEnable[i], port1[i], port2[i], tripSignal[i]);
+
+        s1_bus1_(&timeData[i], &deviceEnable[i], tripSignal[i]);
     }
 }

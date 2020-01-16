@@ -8,7 +8,7 @@ void lineLinkSimulation(Device* device, char* deviceName, double time, int devic
 void busLinkSimulation(Device* device, char* deviceName, double time, int deviceEnable, double* tripSignal);
 
 
-void deviceInit(Device* device, char* deviceName, int deviceEnable);
+void deviceInit(Device* device, char* deviceName, int deviceEnable, char type);
 int readConfiguration(Device* device, char elementType);
 void initSwitchQueueTime(Device* device);
 double findSetValueIndex(char* target, char (*paramName)[STRING_LENGTH], double* paramValue, int n, Device* device);
